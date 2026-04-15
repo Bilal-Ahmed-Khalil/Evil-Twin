@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validating...</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: white; /* White background */
+        }
+        .container {
+            text-align: center;
+            background-color: #f9f9f9; /* Light grey background for contrast */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        img {
+            max-width: 80px;
+            margin-bottom: 20px;
+        }
+        .circle-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px auto;
+        }
+        .circle {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 10px solid lightblue; /* Light blue border */
+            background: conic-gradient(lightblue 0%, transparent 0%); /* Animated background */
+            clip-path: circle(50% at 50% 50%); /* Circle shape */
+            transition: background 0.5s linear; /* Smooth transition for filling effect */
+        }
+        @keyframes fill {
+            from {
+                background: conic-gradient(lightblue 0%, transparent 0%);
+            }
+            to {
+                background: conic-gradient(lightblue 100%, transparent 100%);
+            }
+        }
+    </style>
+    <script>
+        function startAnimation() {
+            var duration = 10; // Duration in seconds
+            var circle = document.querySelector('.circle');
+            var startTime = Date.now();
+
+            function update() {
+                var elapsedTime = (Date.now() - startTime) / 1000; // Time in seconds
+                var progress = Math.min(elapsedTime / duration, 1); // Calculate progress
+
+                circle.style.background = `conic-gradient(lightblue ${progress * 100}%, transparent ${progress * 100}%)`;
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    window.history.back(); // Redirect after animation completes
+                }
+            }
+
+            update();
+        }
+    </script>
+</head>
+<body onload="startAnimation()">
+    <div class="container">
+        <img src="logo.png" alt="Logo">
+        <div class="circle-container">
+            <div class="circle"></div>
+        </div>
+        <h2>Validating...</h2>
+    </div>
+</body>
+</html>
