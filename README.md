@@ -1,93 +1,243 @@
 # Evil-Twin Captive Portal Framework
 
-**Host any customized captive portal (vendor-specific login pages) for Evil Twin attacks using Apache2, hostapd & dnsmasq**
+**A customizable captive portal framework for authorized Wi-Fi security testing and wireless security research.**
 
-[![License: Educational](https://img.shields.io/badge/License-Educational%20Use%20Only-red.svg)](https://github.com/Bilal-Ahmed-Khalil/Evil-Twin)
-[![Platform](https://img.shields.io/badge/Platform-Kali%20Linux%20%7C%20Ubuntu-blue.svg)](https://www.kali.org/)
-[![Language](https://img.shields.io/badge/Language-Python%20%7C%20Bash-yellow.svg)]()
-
-> Designed especially for regions where router vendor login pages are highly diverse (e.g., Pakistan — TP-Link, Huawei, Tenda, D-Link, local ISP gateways).
-
----
-
-### ⚠️ Legal & Ethical Disclaimer
-
-This tool is created **strictly for educational purposes, authorized penetration testing, red team exercises, and security research**.
-
-- Using this tool against any network without **explicit written permission** is **illegal**.
-- The author is **not responsible** for any misuse or damage caused by this tool.
-- Always obtain proper authorization before testing any wireless network.
-
-**By using this repository, you agree to use it responsibly and ethically.**
+<p align="center">
+  <img src="https://img.shields.io/badge/Platform-Kali%20Linux%20%7C%20Ubuntu-blue?logo=linux" alt="Platform">
+  <img src="https://img.shields.io/badge/Language-Python%20%7C%20Bash-yellow" alt="Language">
+  <img src="https://img.shields.io/badge/License-Educational%20Use%20Only-red" alt="Educational Use Only">
+</p>
 
 ---
 
-### Features
+## Overview
 
-- Fully customizable captive portal (any HTML/CSS/JS page)
-- Supports vendor-specific login pages (perfect for local routers in Pakistan and similar markets)
-- Simple one-command automation via Python script
-- Uses standard & reliable stack: `hostapd` + `dnsmasq` + `Apache2`
-- Easy credential capture via Wireshark / Apache logs
-- Lightweight and works on most Kali Linux / Ubuntu systems with compatible wireless adapters
+**Evil-Twin Captive Portal Framework** is a Linux-based project for studying Wi-Fi authentication workflows, captive portal behavior, and wireless network security in controlled laboratory environments.
+
+The project combines common Linux networking components with a customizable web interface to help security researchers understand how captive portals work and how users can be exposed to rogue access points.
+
+It is intended for educational demonstrations, authorized penetration testing, and defensive security research.
+
+### Key Features
+
+- **Customizable portal interface** — Build captive portal pages using HTML, CSS, and JavaScript.
+- **Vendor-inspired templates** — Study the visual design and authentication workflows of common router interfaces, including TP-Link, Huawei, Tenda, and D-Link.
+- **Linux networking integration** — Uses established networking utilities and services.
+- **Python automation** — Provides a Python-based entry point for managing laboratory experiments.
+- **Flexible configuration** — Keeps network and web interface settings in separate files.
+- **Wireless security education** — Demonstrates captive portal behavior, rogue access point risks, and user awareness.
+- **Kali Linux and Ubuntu support** — Designed for compatible Linux environments and wireless hardware.
 
 ---
+
+## Legal and Ethical Use
+
+This project is intended **only for authorized security testing, isolated lab exercises, and educational research**.
+
+- Obtain explicit authorization from the network owner before conducting any testing.
+- Use dedicated test equipment and networks whenever possible.
+- Never impersonate a real network or service to deceive unsuspecting users.
+- Do not collect, store, or transmit real users' passwords or other sensitive information.
+- Use synthetic credentials and test accounts for demonstrations.
+- Follow applicable laws, organizational policies, and responsible disclosure practices.
+
+The author and contributors do not endorse unauthorized access, credential theft, phishing, or other malicious activity.
+
+**You are responsible for ensuring that your use of this project is lawful and authorized.**
+
+---
+
+## Technology Stack
+
+| Component | Purpose |
+|---|---|
+| Python 3 | Automation and experiment management |
+| hostapd | Wireless access point management |
+| dnsmasq | DHCP and DNS services |
+| Apache HTTP Server | Hosting local web content |
+| iptables | Linux firewall configuration |
+| HTML, CSS, JavaScript | Captive portal interface |
 
 ### Requirements
 
-| Component              | Requirement                                      |
-|------------------------|--------------------------------------------------|
-| Operating System       | Kali Linux (recommended) or Ubuntu               |
-| Wireless Adapter       | Must support **Monitor Mode + AP Mode** (nl80211)|
-| Packages               | hostapd, dnsmasq, apache2, iptables, python3     |
-| Privileges             | Root / sudo                                      |
+- Kali Linux or Ubuntu
+- Root or `sudo` privileges for authorized network configuration
+- A compatible wireless adapter supporting access point mode
+- The packages listed in the technology stack
+- An isolated test environment or an explicitly authorized test network
+
+Wireless adapter capabilities vary by chipset, driver, and kernel version. Verify hardware compatibility before beginning a lab exercise.
 
 ---
 
-### Installation
+## Installation
+
+### 1. Clone the Repository
 
 ```bash
-# Clone the repository
-git clone [https://github.com/Bilal-Ahmed-Khalil/Evil-Twin.git](https://github.com/Bilal-Ahmed-Khalil/Evil-Twin.git)
+git clone https://github.com/Bilal-Ahmed-Khalil/Evil-Twin.git
 cd Evil-Twin
+```
 
-# Install required packages (Kali/Ubuntu)
+### 2. Install Dependencies
+
+```bash
 sudo apt update
-sudo apt install hostapd dnsmasq apache2 -y
+sudo apt install hostapd dnsmasq apache2 iptables python3 -y
+```
 
-Quick StartPlace your captive portal pageBashsudo cp your-custom-portal.html /var/www/html/index.html
-Tip: Clone real vendor pages (TP-Link, Huawei, etc.) for higher success rate.Stop NetworkManagerBashsudo systemctl stop NetworkManager
-Run the toolBashsudo python3 wifitool.py -i wlan0
-Replace wlan0 with your wireless interface name.Capture credentialsOpen Wireshark and filter: http.request.method == POSTOr check Apache access logsManual Step-by-Step Setup (Alternative)Bash# 1. Place portal
-sudo cp index.html /var/www/html/
+### 3. Review the Project Files
 
-# 2. Stop NetworkManager
-sudo systemctl stop NetworkManager
+Inspect the configuration files and Python script before executing anything with elevated privileges.
 
-# 3. Flush iptables
-sudo ./8.1\ flushiptables.sh.sh
+```bash
+ls -la
+```
 
-# 4. Start dnsmasq & hostapd
-sudo dnsmasq -C "9.1 dnsmasq.conf.conf"
-sudo hostapd "9.2 hostapd.conf.conf" -B
+Check that the configuration matches your lab environment and that any firewall or network changes are limited to your test setup.
 
-# 5. Assign IP
-sudo ifconfig wlan0 10.0.0.1 netmask 255.255.255.0
+---
 
-# 6. Enable Apache rewrite & start
-sudo a2enmod rewrite
-sudo systemctl restart apache2
-sudo systemctl start apache2
-Configuration FilesFilePurpose9.2 hostapd.conf.confRogue AP settings (SSID, channel)9.1 dnsmasq.conf.confDHCP + DNS redirection8.1 flushiptables.sh.shClears and sets redirection rulesindex.htmlYour captive portal pagewifitool.pyAutomation scriptImportant: Edit ssid= inside 9.2 hostapd.conf.conf to match the target network name.Captive Portal Tips (Higher Success Rate)Use real vendor login page design (TP-Link, Huawei HG series, Tenda, etc.)Keep the page simple and mobile-friendlyUse POST method for the password fieldAdd a loading animation after submit (increases realism)Example form field:HTML<input type="password" name="password" placeholder="WiFi Password" required>
-Capturing CredentialsMethod 1 – Wireshark (Recommended)Bashsudo wireshark
-# Filter: http.request.method == "POST"
-Method 2 – Apache LogsBashsudo tail -f /var/log/apache2/access.log
-Project StructureEvil-Twin/
-├── wifitool.py                 # Main automation script
-├── index.html                  # Default captive portal
-├── 9.1 dnsmasq.conf.conf       # DHCP + DNS config
-├── 9.2 hostapd.conf.conf       # Rogue AP config
-├── 8.1 flushiptables.sh.sh     # iptables rules
-├── 10.1 rewrite-rules.txt.txt  # Apache rewrite rules
-└── README.md
-TroubleshootingProblemSolutionInterface not foundCheck with iwconfig or ip linkhostapd failsMake sure adapter supports AP modeClients not getting IPRestart dnsmasq and check DHCP rangePortal not loadingVerify Apache is running + rewrite enabledNetworkManager conflictAlways stop it before starting the attackAuthorBilal Ahmed KhalilGitHub: Bilal-Ahmed-KhalilLicenseThis project is released for educational and authorized security testing purposes only.Unauthorized use is strictly prohibited.
+## Project Structure
+
+```text
+Evil-Twin/
+├── wifitool.py                    # Python automation script
+├── index.html                     # Default portal interface
+├── 9.1 dnsmasq.conf.conf          # DHCP and DNS configuration
+├── 9.2 hostapd.conf.conf          # Wireless AP configuration
+├── 8.1 flushiptables.sh.sh        # Firewall rule management
+├── 10.1 rewrite-rules.txt.txt     # Apache rewrite configuration
+└── README.md                      # Project documentation
+```
+
+*Note: The descriptions above reflect the filenames and intended purposes provided by the project author. Review the actual files to confirm their behavior.*
+
+---
+
+## Customizing the Portal
+
+The default web page is `index.html`.
+
+You can customize its appearance and behavior with standard web technologies:
+
+- HTML for page structure
+- CSS for styling and responsive layouts
+- JavaScript for client-side interactions
+- Local test fixtures for demonstrating authentication workflows
+
+For safe demonstrations, use a clearly labeled lab interface and synthetic test data. Avoid copying real service login pages in ways that could mislead users into disclosing actual credentials.
+
+### Example Test Form
+
+```html
+<form id="lab-login">
+  <label for="username">Test username</label>
+  <input
+    type="text"
+    id="username"
+    name="username"
+    autocomplete="off"
+    required
+  >
+
+  <button type="submit">Run demonstration</button>
+</form>
+```
+
+This example is intended for a local demonstration and does not submit credentials to a server.
+
+---
+
+## Configuration
+
+The repository separates its configuration into several files:
+
+| File | Description |
+|---|---|
+| `9.1 dnsmasq.conf.conf` | DHCP and DNS service settings |
+| `9.2 hostapd.conf.conf` | Wireless access point settings |
+| `8.1 flushiptables.sh.sh` | Firewall rule management |
+| `10.1 rewrite-rules.txt.txt` | Apache rewrite configuration |
+| `index.html` | Web interface |
+| `wifitool.py` | Automation entry point |
+
+Before running the project, review the scripts for destructive operations, firewall changes, service interruptions, and unexpected network redirection.
+
+**Important:** The automation script and configuration files should be audited before use. Their exact behavior cannot be established from the filenames alone.
+
+---
+
+## Troubleshooting
+
+| Problem | What to check |
+|---|---|
+| Wireless interface not found | Check the interface name using `ip link` and inspect adapter detection. |
+| Access point service fails | Review service logs, driver compatibility, and AP-mode support. |
+| DHCP does not work | Inspect the DHCP configuration, address range, and service logs. |
+| Portal is inaccessible | Verify Apache status, the document root, and local network connectivity. |
+| Network services conflict | Check for existing services managing the same wireless interface or ports. |
+| Firewall behavior is unexpected | Inspect the active rules and restore the lab's documented baseline. |
+
+Useful diagnostic commands:
+
+```bash
+ip link
+iw list
+systemctl status apache2
+systemctl status hostapd
+systemctl status dnsmasq
+```
+
+Service availability and command output will depend on your Linux distribution and configuration.
+
+---
+
+## Security Research Use Cases
+
+This project can support controlled exercises involving:
+
+- Understanding captive portal detection and behavior
+- Studying rogue access point threats
+- Evaluating user awareness of suspicious Wi-Fi login pages
+- Testing defensive monitoring and wireless intrusion detection
+- Learning about DHCP, DNS, HTTP, and wireless authentication
+- Developing secure captive portal designs
+
+For credential-handling demonstrations, use synthetic accounts and record only the minimum test data required.
+
+---
+
+## Contributing
+
+Contributions that improve documentation, reliability, accessibility, and defensive security are welcome.
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Make your changes and test them in an isolated lab.
+4. Document any configuration changes and compatibility requirements.
+5. Submit a pull request describing the changes.
+
+Please do not submit changes intended to facilitate unauthorized credential collection or access to third-party networks.
+
+---
+
+## Author
+
+**Bilal Ahmed Khalil**
+
+GitHub: [@Bilal-Ahmed-Khalil](https://github.com/Bilal-Ahmed-Khalil)
+
+Project repository: [Evil-Twin Captive Portal Framework](https://github.com/Bilal-Ahmed-Khalil/Evil-Twin)
+
+---
+
+## License
+
+This project is intended for educational and authorized security research purposes.
+
+Unless a formal license file specifies otherwise, the educational-use description in this README should not be treated as a complete legal license. Review the repository's `LICENSE` file or add an explicit license defining permitted use, redistribution, and modification.
+
+---
+
+**Disclaimer:** This repository is provided for educational purposes and authorized security research. Users are responsible for obtaining permission and complying with applicable laws before conducting wireless security tests.
